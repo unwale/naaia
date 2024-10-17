@@ -2,4 +2,5 @@
 /include
 /lib
 /lib64
+/tmp
 pyvenv.cfg
