@@ -3,5 +3,6 @@ __pycache__/
 /lib
 /lib64
 /tmp
+/bin
 pyvenv.cfg
 .env

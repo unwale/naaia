@@ -73,9 +73,10 @@ class SpbuParser(Parser):
                     date = tree.xpath('//span[@class="post__date"]/text()')[0]
                     news.append(
                         NewsItem(
-                            source=self.source,
-                            date=datestr_to_datetime(date),
-                            text=f'{summary}\n\n{text}'
+                            date = datestr_to_datetime(date),
+                            title = title,
+                            text = f'{summary}\n\n{text}',
+                            source = self.source
                         )
                     )
 

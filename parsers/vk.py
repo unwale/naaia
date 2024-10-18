@@ -33,8 +33,9 @@ class VkParser(Parser):
                     news.append(
                         NewsItem(
                             date = datetime.fromtimestamp(post['date']),
+                            title = None,
                             text = post['text'],
-                            source=self.source
+                            source = self.source
                         )
                     )
         return news

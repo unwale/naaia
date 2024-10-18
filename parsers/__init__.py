@@ -34,6 +34,7 @@ class NewsSource:
 @dataclass
 class NewsItem:
     date: datetime
+    title: str
     text: str
     source: NewsSource
 

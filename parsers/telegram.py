@@ -14,7 +14,12 @@ class TelegramParser(Parser):
         news = []
         try:
             async for message in self.client.iter_messages(self.source.id, limit=item_limit, wait_time=2):
-                item = NewsItem(date=message.date, text=message.text, source=self.source)
+                item = NewsItem(
+                    date = message.date,
+                    title = None, 
+                    text = message.text, 
+                    source = self.source
+                    )
                 news.append(item)
         except Exception as e:
             print(f"An error occurred: {e}")
