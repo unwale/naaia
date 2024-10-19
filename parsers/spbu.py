@@ -18,6 +18,7 @@ class SpbuParser(Parser):
 
     def __init__(self, source: NewsSource):
         super().__init__(source)
+        self.max_limit = 615 * 10
         self.results = []
 
     async def fetch_page(self, session, page_number) -> str:
@@ -85,7 +86,10 @@ class SpbuParser(Parser):
         self.results[page_number] = news
 
     
-    async def fetch_news(self, item_limit: int) -> List[NewsItem]:
+    async def fetch_news(self, item_limit: int = None) -> List[NewsItem]:
+        if item_limit is None:
+            item_limit = self.max_limit
+
         total_pages = item_limit // 10
         self.results = [0] * total_pages
         async with aiohttp.ClientSession() as session:

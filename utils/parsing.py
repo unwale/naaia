@@ -24,7 +24,7 @@ def get_parser_for(source: NewsSource):
 def _get_web_scraper(source: NewsSource):
     match (source.id):
 
-        case "spbu-official":
+        case 'spbu-website':
             return SpbuParser(2)
         
         case _:

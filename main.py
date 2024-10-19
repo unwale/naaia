@@ -5,6 +5,7 @@ from parsers import NewsSource, NewsItem, Platform
 from typing import List
 from telethon import TelegramClient
 from utils.parsing import get_parser_for
+from database.database import Database
 
 dotenv.load_dotenv()
 
@@ -20,6 +21,8 @@ sources = [
     NewsSource('Новости | СПбГУ', Platform.WEB, 'spbu-website')
 ]
 
+db = Database()
+
 client = TelegramClient(
     session='/tmp/session', 
     api_id=os.getenv('TELEGRAM_APP_ID'), 
@@ -34,11 +37,12 @@ async def main():
 
         if (source.platform == Platform.TELEGRAM):
             parser.client = client
-
-        news: List[NewsItem] = await parser.fetch_news(item_limit=1)
-        print(f'{len(news)} news from {source.name}')
+            
+        news: List[NewsItem] = await parser.fetch_news()
+        db.insert_news(news)
 
     await client.disconnect()    
+    db.close()
 
 asyncio.run(main())
 

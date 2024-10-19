@@ -42,7 +42,8 @@ class NewsItem:
 class Parser(ABC):
 
     def __init__(self, source: NewsSource) -> None:
-        self.source = source
+        self.max_limit: int = 0
+        self.source: NewsSource = source
     
     @abstractmethod
     async def fetch_news(self, item_limit: int) -> List[NewsItem]:
