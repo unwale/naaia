@@ -11,8 +11,8 @@ class Database:
     def insert_news(self, items: List[NewsItem]) -> None:
 
         insert_query = """
-        INSERT INTO news (title, text, created_at, source_id)
-        VALUES %s
+        INSERT INTO news (raw_title, raw_text, created_at, source_id)
+        VALUES (%s, %s, %s, %s) 
         """
         
         self.cur.executemany(

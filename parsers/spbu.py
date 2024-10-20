@@ -7,12 +7,6 @@ from utils.date import datestr_to_datetime
 
 class SpbuParser(Parser):
 
-    """
-    Attributes:
-        results: List[List[NewsItem]]
-            Stores news from each page in the right order
-    """
-
     base_url = 'https://spbu.ru'
     page_url = base_url + '/news-events/novosti?page={}'
 

@@ -33,13 +33,17 @@ async def main():
     await client.start()
 
     for source in sources:
+        print(f'[i] Creating a {source.platform.name} parser')
         parser = get_parser_for(source)
 
         if (source.platform == Platform.TELEGRAM):
             parser.client = client
             
+        print('[i] Parsing')
         news: List[NewsItem] = await parser.fetch_news()
+        print(f'[i] {len(news)} news parsed from {source.name}')
         db.insert_news(news)
+        print(f'[i] PostgreSQL transaction completed')
 
     await client.disconnect()    
     db.close()
