@@ -43,6 +43,7 @@ class Parser(ABC):
 
     def __init__(self, source: NewsSource) -> None:
         self.max_limit: int = 0
+        self.max_requests: int = 10
         self.source: NewsSource = source
     
     @abstractmethod

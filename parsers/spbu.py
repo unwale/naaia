@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 from lxml import html
 from typing import List
+from math import ceil
 from parsers import Parser, NewsItem, NewsSource
 from utils.date import datestr_to_datetime
 
@@ -38,7 +39,7 @@ class SpbuParser(Parser):
         - page_content: The raw HTML content of the page.
         
         Returns:
-        - Parsed data (this can be customized as per the structure of the target website).
+        - List of news page urls 
         """
         tree = html.fromstring(page_content)
         news_urls = tree.xpath('//a[@class="card__header" and not(ancestor::aside)]/@href')
@@ -62,10 +63,16 @@ class SpbuParser(Parser):
                 tree = html.fromstring(await response.text())
                 try:
                     title = tree.xpath('//h1[@class="post__title"]/text()')[0]
+                    
                     summary = tree.xpath('//div[@class="post__desc"]/text()')
                     summary = summary[0] if len(summary) > 0 else ''
-                    text = '/n'.join(tree.xpath('//article[@class="editor-wrap"]/text()'))
-                    date = tree.xpath('//span[@class="post__date"]/text()')[0]
+                    text = '/n'.join([el.text_content() for el in tree.xpath('//article[@class="editor-wrap"]')])
+
+                    date = tree.xpath('//span[@class="post__date"]/text()')
+                    if (len(date) == 0): 
+                        date = tree.xpath('//span[@class="card__date"]/text()')
+                    date = date[0]
+                    
                     news.append(
                         NewsItem(
                             date = datestr_to_datetime(date),
@@ -76,7 +83,7 @@ class SpbuParser(Parser):
                     )
 
                 except:
-                    pass
+                    print(f'Error parsing {url}') 
         self.results[page_number] = news
 
     
@@ -84,13 +91,20 @@ class SpbuParser(Parser):
         if item_limit is None:
             item_limit = self.max_limit
 
-        total_pages = item_limit // 10
+        total_pages = ceil(item_limit / 10)
         self.results = [0] * total_pages
-        async with aiohttp.ClientSession() as session:
-            tasks = []
-            for page_number in range(0, total_pages):
-                task = asyncio.create_task(self.scrape_page(session, page_number))
-                tasks.append(task)
 
-            await asyncio.gather(*tasks)
+        async with aiohttp.ClientSession() as session:
+            for i in range(ceil(total_pages / self.max_requests)):
+                tasks = []
+                num_pages_to_parse = min(self.max_requests, total_pages - i * self.max_requests)
+
+                print(f'[i] - Parsing pages {i*self.max_requests} - {i*self.max_requests + num_pages_to_parse}')
+                for request_number in range(0, num_pages_to_parse):
+                    page_number = i * self.max_requests + request_number
+                    task = asyncio.create_task(self.scrape_page(session, page_number))
+                    tasks.append(task)
+
+                await asyncio.gather(*tasks)
+                await asyncio.sleep(1)
         return [item for result in self.results for item in result]

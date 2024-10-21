@@ -11,7 +11,7 @@ class Database:
     def insert_news(self, items: List[NewsItem]) -> None:
 
         insert_query = """
-        INSERT INTO news (raw_title, raw_text, created_at, source_id)
+        INSERT INTO news2 (raw_title, raw_text, created_at, source_id)
         VALUES (%s, %s, %s, %s) 
         """
         

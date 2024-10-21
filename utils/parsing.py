@@ -1,4 +1,3 @@
-import os
 from parsers import NewsSource, Platform
 from parsers.telegram import TelegramParser
 from parsers.spbu import SpbuParser
@@ -25,7 +24,7 @@ def _get_web_scraper(source: NewsSource):
     match (source.id):
 
         case 'spbu-website':
-            return SpbuParser(2)
+            return SpbuParser(source)
         
         case _:
             raise Exception(f'Unknown website ID: {source.id}')

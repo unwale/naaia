@@ -10,14 +10,14 @@ from database.database import Database
 dotenv.load_dotenv()
 
 sources = [
-    NewsSource('Матмех СПбГУ', Platform.TELEGRAM, 'mmspbu'),
-    NewsSource('Что там в СПбГУ', Platform.TELEGRAM, 'spbuniversity1724'),
-    NewsSource('Профком Матмеха СПбГУ', Platform.TELEGRAM, 'mmprofkomspbu'),
-    NewsSource('Студенческий совет СПбГУ', Platform.VK, 'ssspbu'),
-    NewsSource('Факультет МКН СПбГУ', Platform.VK, 'spbumathcs'),
-    NewsSource('Лупа и Пупа', Platform.VK, 'lyandpy'),
-    NewsSource('СНО СПбГУ', Platform.VK, 'sno.spbu'),
-    NewsSource('СПбГУ', Platform.VK, 'spb1724'),
+    # NewsSource('Матмех СПбГУ', Platform.TELEGRAM, 'mmspbu'),
+    # NewsSource('Что там в СПбГУ', Platform.TELEGRAM, 'spbuniversity1724'),
+    # NewsSource('Профком Матмеха СПбГУ', Platform.TELEGRAM, 'mmprofkomspbu'),
+    # NewsSource('Студенческий совет СПбГУ', Platform.VK, 'ssspbu'),
+    # NewsSource('Факультет МКН СПбГУ', Platform.VK, 'spbumathcs'),
+    # NewsSource('Лупа и Пупа', Platform.VK, 'lyandpy'),
+    # NewsSource('СНО СПбГУ', Platform.VK, 'sno.spbu'),
+    # NewsSource('СПбГУ', Platform.VK, 'spb1724'),
     NewsSource('Новости | СПбГУ', Platform.WEB, 'spbu-website')
 ]
 
@@ -38,7 +38,8 @@ async def main():
 
         if (source.platform == Platform.TELEGRAM):
             parser.client = client
-            
+        if (source.platform == Platform.WEB):
+            parser.max_requests = 5
         print('[i] Parsing')
         news: List[NewsItem] = await parser.fetch_news()
         print(f'[i] {len(news)} news parsed from {source.name}')
