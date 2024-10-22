@@ -37,6 +37,7 @@ class NewsItem:
     title: str
     text: str
     source: NewsSource
+    news_url: str
 
 
 class Parser(ABC):

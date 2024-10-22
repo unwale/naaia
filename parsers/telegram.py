@@ -22,7 +22,8 @@ class TelegramParser(Parser):
                     date = message.date,
                     title = None, 
                     text = message.text, 
-                    source = self.source
+                    source = self.source,
+                    news_url = f"https://t.me/{self.source.id}/{message.id}"
                     )
                 news.append(item)
         except Exception as e:

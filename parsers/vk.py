@@ -48,7 +48,8 @@ class VkParser(Parser):
                             date = datetime.fromtimestamp(post['date']),
                             title = None,
                             text = post['text'],
-                            source = self.source
+                            source = self.source,
+                            news_url = f"https://vk.com/{self.source.id}?w=wall{post['owner_id']}_{post['id']}"
                         )
                     )
         return news

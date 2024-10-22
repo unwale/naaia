@@ -78,7 +78,8 @@ class SpbuParser(Parser):
                             date = datestr_to_datetime(date),
                             title = title,
                             text = f'{summary}\n\n{text}',
-                            source = self.source
+                            source = self.source,
+                            news_url = self.base_url + url
                         )
                     )
 
