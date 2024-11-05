@@ -5,5 +5,7 @@ __pycache__/
 /tmp
 /bin
 /share
+/etc
+/data
 pyvenv.cfg
 .env
