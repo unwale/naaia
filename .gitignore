@@ -9,5 +9,6 @@ __pycache__/
 pyvenv.cfg
 .env
 /notebooks
+model
 *train.jsonl
 *data.jsonl
