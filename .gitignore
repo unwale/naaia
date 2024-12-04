@@ -6,6 +6,8 @@ __pycache__/
 /bin
 /share
 /etc
-/data
 pyvenv.cfg
 .env
+/notebooks
+*train.jsonl
+*data.jsonl
