@@ -14,11 +14,18 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("--model", type=str, help="Model path")
 parser.add_argument("--tokenizer", type=str, help="Tokenizer path")
-# TODO add tokenizer.model_max_length for deeppavlov
+parser.add_argument(
+    "--tokenizer_max_length",
+    type=int,
+    help="Tokenizer max length",
+    default=None,
+)
 args = parser.parse_args()
 
 model_name = args.model.split("/")[-1].split(".")[0]
 model = BertTextClassifier(args.model, args.tokenizer)
+if args.tokenizer_max_length:
+    model.tokenizer.model_max_length = args.tokenizer_max_length
 
 test = pd.read_json("./data/labeled/test.jsonl", lines=True)
 train = pd.read_json("./data/labeled/train.jsonl", lines=True)
