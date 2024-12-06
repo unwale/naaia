@@ -1,7 +1,9 @@
-from yandex_cloud_ml_sdk import YCloudML
 from typing import List, Tuple
 
-class YandexZeroshot():
+from yandex_cloud_ml_sdk import YCloudML
+
+
+class YandexZeroshot:
 
     def __init__(self, folder_id: str, api_key: str):
         """
@@ -13,40 +15,47 @@ class YandexZeroshot():
         self.sdk = YCloudML(folder_id=folder_id, auth=api_key)
 
     def predict(self, inputs: List[str], topics: List[str]) -> List[str]:
-        model =  self.sdk.models.text_classifiers('yandexgpt').configure(
-            task_description="Определи тему новости",
-            labels=topics
+        model = self.sdk.models.text_classifiers("yandexgpt").configure(
+            task_description="Определи тему новости", labels=topics
         )
         predicitions = []
         for text in inputs:
-            prediction = max(model.run(text).predictions, key=lambda x: x.confidence).label
+            prediction = max(
+                model.run(text).predictions, key=lambda x: x.confidence
+            ).label
             predicitions.append(prediction)
 
         return predicitions
 
-class YandexFewShot():
-    
-    def __init__(self, folder_id: str, api_key: str, examples: List[Tuple[str, str]]):
+
+class YandexFewShot:
+
+    def __init__(
+        self, folder_id: str, api_key: str, examples: List[Tuple[str, str]]
+    ):
         """
         Initializes the Yandex Fewshot classifier.
 
         Parameters:
         - api_key: The Yandex API key.
-        - examples: A list of tuples, where each tuple contains a text and a label.
+        - examples: A list of tuples, where each tuple contains
+                    a text and a label.
         """
         self.sdk = YCloudML(folder_id=folder_id, auth=api_key)
         self.examples = examples
 
     def predict(self, inputs: List[str], topics: List[str]) -> List[str]:
-        model =  self.sdk.models.text_classifiers('yandexgpt').configure(
+        model = self.sdk.models.text_classifiers("yandexgpt").configure(
             task_description="Определи тему новости",
             labels=topics,
-            examples=self.examples
+            examples=self.examples,
         )
 
         predicitions = []
         for text in inputs:
-            prediction = max(model.run(text).predictions, key=lambda x: x.confidence).label
+            prediction = max(
+                model.run(text).predictions, key=lambda x: x.confidence
+            ).label
             predicitions.append(prediction)
 
         return predicitions

@@ -1,6 +1,6 @@
 # Models
 
-Contiains model classes for further interaction (evaluation). 
+Contiains model classes for further interaction (evaluation).
 Each model class provides a `predict` method that takes a list of texts and returns a list of predictions.
 
 ## Available models

@@ -1,21 +1,24 @@
 import asyncio
-import aiohttp
 import logging
-from lxml import html
-from typing import List
 from math import ceil
-from . import Parser, NewsItem, NewsSource
+from typing import List
+
+import aiohttp
+from lxml import html
+
+from . import NewsItem, NewsSource, Parser
+
 
 class SpbuParser(Parser):
 
-    base_url = 'https://spbu.ru'
-    page_url = base_url + '/news-events/novosti?page={}'
+    base_url = "https://spbu.ru"
+    page_url = base_url + "/news-events/novosti?page={}"
 
     def __init__(self, source: NewsSource):
         super().__init__(source)
         self.max_limit = 615 * 10
         self.results = []
-        self.logger = logging.getLogger('spbu-scraper')
+        self.logger = logging.getLogger("spbu-scraper")
 
     async def fetch_page(self, session, page_number) -> str:
         """
@@ -38,14 +41,15 @@ class SpbuParser(Parser):
 
         Parameters:
         - page_content: The raw HTML content of the page.
-        
+
         Returns:
-        - List of news page urls 
+        - List of news page urls
         """
         tree = html.fromstring(page_content)
-        news_urls = tree.xpath('//a[@class="card__header" and not(ancestor::aside)]/@href')
+        news_urls = tree.xpath(
+            '//a[@class="card__header" and not(ancestor::aside)]/@href'
+        )
         return news_urls
-
 
     async def scrape_page(self, session, page_number) -> None:
         """
@@ -66,39 +70,47 @@ class SpbuParser(Parser):
                 tree = html.fromstring(await response.text())
                 try:
                     title = tree.xpath('//h1[@class="post__title"]/text()')[0]
-                    
+
                     summary = tree.xpath('//div[@class="post__desc"]/text()')
-                    summary = summary[0] if len(summary) > 0 else ''
-                    text = '/n'.join([el.text_content() for el in tree.xpath('//article[@class="editor-wrap"]')])
+                    summary = summary[0] if len(summary) > 0 else ""
+                    text = "/n".join(
+                        [
+                            el.text_content()
+                            for el in tree.xpath(
+                                '//article[@class="editor-wrap"]'
+                            )
+                        ]
+                    )
                     tags = []
                     try:
-                        tags = tree.xpath('//div[@class="tag-list"]//span/text()')
-                        tags = '\t'.join(tags)
-                    except:
+                        tags = tree.xpath(
+                            '//div[@class="tag-list"]//span/text()'
+                        )
+                        tags = "\t".join(tags)
+                    except Exception:
                         ...
 
                     date = tree.xpath('//span[@class="post__date"]/text()')
-                    if (len(date) == 0): 
+                    if len(date) == 0:
                         date = tree.xpath('//span[@class="card__date"]/text()')
                     date = date[0]
-                    
+
                     news.append(
                         NewsItem(
-                            date = datestr_to_datetime(date),
-                            title = title,
+                            date=datestr_to_datetime(date),
+                            title=title,
                             summary=summary,
-                            text = text,
-                            source = self.source,
-                            news_url = self.base_url + url,
-                            tags=tags
+                            text=text,
+                            source=self.source,
+                            news_url=self.base_url + url,
+                            tags=tags,
                         )
                     )
 
-                except Exception as e:
-                    self.logger.warning(f'Error parsing {url}') 
+                except Exception:
+                    self.logger.warning(f"Error parsing {url}")
         self.results[page_number] = news
 
-    
     async def fetch_news(self, item_limit: int = None) -> List[NewsItem]:
         if item_limit is None:
             item_limit = self.max_limit
@@ -109,12 +121,19 @@ class SpbuParser(Parser):
         async with aiohttp.ClientSession() as session:
             for i in range(ceil(total_pages / self.max_requests)):
                 tasks = []
-                num_pages_to_parse = min(self.max_requests, total_pages - i * self.max_requests)
+                num_pages_to_parse = min(
+                    self.max_requests, total_pages - i * self.max_requests
+                )
 
-                self.logger.info(f'Parsing pages {i*self.max_requests} - {i*self.max_requests + num_pages_to_parse}')
+                self.logger.info(
+                    f"Parsing pages {i * self.max_requests} "
+                    + f"- {i * self.max_requests + num_pages_to_parse}"
+                )
                 for request_number in range(0, num_pages_to_parse):
                     page_number = i * self.max_requests + request_number
-                    task = asyncio.create_task(self.scrape_page(session, page_number))
+                    task = asyncio.create_task(
+                        self.scrape_page(session, page_number)
+                    )
                     tasks.append(task)
 
                 await asyncio.gather(*tasks)

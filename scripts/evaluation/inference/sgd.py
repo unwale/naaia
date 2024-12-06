@@ -1,7 +1,9 @@
-import joblib
 from typing import List
 
-class SGDClassifier():
+import joblib
+
+
+class SGDClassifier:
 
     def __init__(self, path):
         self.model = joblib.load(path)
