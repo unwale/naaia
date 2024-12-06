@@ -1,5 +1,6 @@
 import pandas as pd
-from inference.sgd import SGDClassifier
+
+from model.inference.sgd import SGDClassifier
 
 test = pd.read_json("./data/labeled/test.jsonl", lines=True)
 texts = test["lemmatized_text"].tolist()

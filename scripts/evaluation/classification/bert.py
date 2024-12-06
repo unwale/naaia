@@ -4,8 +4,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from sklearn.metrics import classification_report
 
+from model.inference.bert import BertTextClassifier
 from scripts.evaluation.classification.utils import save_classification_report
-from scripts.evaluation.inference.bert import BertTextClassifier
 
 load_dotenv()
 

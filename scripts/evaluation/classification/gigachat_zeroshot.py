@@ -1,9 +1,10 @@
 import argparse
 
 import pandas as pd
-from inference.gigachat import GigaChatZeroshot
 from sklearn.metrics import classification_report
 from utils import save_classification_report
+
+from model.inference.gigachat import GigaChatZeroshot
 
 parser = argparse.ArgumentParser(
     description="Evaluate Gigachat Zeroshot model"

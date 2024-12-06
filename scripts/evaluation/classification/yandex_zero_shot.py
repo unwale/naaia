@@ -1,7 +1,8 @@
 import pandas as pd
-from inference.yandex import YandexZeroshot
 from sklearn.metrics import classification_report
 from utils import save_classification_report
+
+from model.inference.yandex import YandexZeroshot
 
 model = YandexZeroshot(
     folder_id="b1g2v1k5v5v5v5v5v5", api_key="b1g2v1k5v5v5v5v5v5"
