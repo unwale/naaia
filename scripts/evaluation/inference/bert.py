@@ -4,13 +4,22 @@ import torch
 from tqdm import tqdm
 from transformers import BertTokenizer
 
-# TODO replace model loading with weights loading
+from scripts.training.topic_classification.models import (
+    RuBERTLinText,
+    RuBERTMLPText,
+    RuBERTMultifeature,
+)
 
 
 class BertTextClassifier:
 
-    def __init__(self, model_path: str, tokenizer_path: str):
-        self.model = torch.load(model_path, map_location=torch.device("cpu"))
+    def __init__(
+        self, model_path: str, base_model_name: str, tokenizer_path: str
+    ):
+        self.model = self._make_model_based_on_name(
+            model_path, base_model_name
+        )
+        self.model.load_state_dict(torch.load(model_path))
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
         self.model.eval()
@@ -44,3 +53,15 @@ class BertTextClassifier:
                 predictions.extend(torch.argmax(logits, dim=1))
 
         return [topics[prediction] for prediction in predictions]
+
+    def _make_model_based_on_name(self, model_path: str, base_model_name: str):
+        model_suffix = model_path.split("-")[-1].replace(".pth", "")
+        match model_suffix:
+            case "lin":
+                return RuBERTLinText(base_model_name)
+            case "mlp":
+                return RuBERTMLPText(base_model_name)
+            case "multifeature":
+                return RuBERTMultifeature(base_model_name)
+            case _:
+                raise ValueError(f"Unknown model suffix: {model_suffix}")

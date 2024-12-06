@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # bert-based models
-python -m scripts.evaluation.classification.bert --model ./model/saved/bert_mlp_text_tiny.pth --tokenizer cointegrated/rubert-tiny2
+# TODO add bert-based models
 
 # gigachat
-python scripts/evaluation/gigachat_zeroshot.py --model GigaChat
-python scripts/evaluation/gigachat_zeroshot.py --model GigaChat-Pro
+python -m scripts.evaluation.classification.gigachat_zeroshot --model GigaChat
+python -m scripts.evaluation.classification.gigachat_zeroshot --model GigaChat-Pro
 
 # yandex-gpt
-python scripts/evaluation/yandex_zero_shot.py
-python scripts/evaluation/yandex_few_shot.py
+python -m scripts.evaluation.classification.yandex_zero_shot
+python -m scripts.evaluation.classification.yandex_few_shot

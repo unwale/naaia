@@ -12,7 +12,8 @@ load_dotenv()
 parser = argparse.ArgumentParser(
     description="Evaluate a linear model on top of RuBERT"
 )
-parser.add_argument("--model", type=str, help="Model path")
+parser.add_argument("--model_path", type=str, help="Model path")
+parser.add_argument("--base_model", type=str, help="Base model name")
 parser.add_argument("--tokenizer", type=str, help="Tokenizer path")
 parser.add_argument(
     "--tokenizer_max_length",
@@ -22,8 +23,10 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-model_name = args.model.split("/")[-1].split(".")[0]
-model = BertTextClassifier(args.model, args.tokenizer)
+model_name = args.model_path.split("/")[-1].replace(".pth", "")
+model = BertTextClassifier(
+    args.model_path, args.base_model_name, args.tokenizer
+)
 if args.tokenizer_max_length:
     model.tokenizer.model_max_length = args.tokenizer_max_length
 
