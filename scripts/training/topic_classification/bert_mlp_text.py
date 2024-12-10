@@ -5,11 +5,9 @@ import torch
 from datasets import Dataset
 from transformers import AutoTokenizer
 
+from scripts import topics
 from scripts.training.topic_classification.models import RuBERTMLPText
-from scripts.training.topic_classification.trainer import (
-    CustomTrainer,
-    FocalLoss,
-)
+from scripts.training.trainer import CustomTrainer, FocalLoss
 
 parser = argparse.ArgumentParser(
     description="Train a linear model on top of RuBERT"
@@ -40,8 +38,8 @@ train_encodings = tokenizer(
 test_encodings = tokenizer(
     test["text"].tolist(), truncation=True, padding=True
 )
-y_train = train["topic"].astype("category").cat.codes
-y_test = test["topic"].astype("category").cat.codes
+y_train = train["topic"].apply(lambda x: topics.index(x))
+y_test = test["topic"].apply(lambda x: topics.index(x))
 
 train_dataset = Dataset.from_dict(
     {
@@ -58,7 +56,9 @@ test_dataset = Dataset.from_dict(
     }
 )
 
-model = RuBERTMLPText(args.model, num_classes=train["topic"].nunique())
+model = RuBERTMLPText(
+    args.model, num_classes=train["topic"].nunique(), hidden_size=128
+)
 
 trainer = CustomTrainer(
     model=model,
