@@ -34,7 +34,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 logger.info("Loading spacy model and nltk stopwords")
-nlp = spacy.load("ru_core_news_lg")
+nlp = spacy.load("ru_core_news_sm")
 nltk.download("stopwords")
 stopwords = set(nltk.corpus.stopwords.words("russian"))
 
