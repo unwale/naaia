@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 from math import ceil
 from typing import List
@@ -81,12 +82,12 @@ class SpbuParser(Parser):
                             )
                         ]
                     )
-                    tags = []
+                    tags = None
                     try:
                         tags = tree.xpath(
                             '//div[@class="tag-list"]//span/text()'
                         )
-                        tags = "\t".join(tags)
+                        tags = json.dumps(tags)
                     except Exception:
                         ...
 
