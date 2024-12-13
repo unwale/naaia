@@ -39,16 +39,22 @@ def avg_gpt_similarity(texts, keywords):
     openai = OpenAI(api_key=os.getenv("OPENAI_TOKEN"))
     scores = []
     for text, keyword in tqdm(zip(texts, keywords), total=len(texts)):
+        messages = [
+            {
+                "role": "user",
+                "content": "Оцени от 0 до 100, насколько хорошо ключевые слова"
+                + f" характеризуют этот текст: {text}"
+                + f"\n\nКлючевые слова для оценки: {keyword}",
+            }
+        ]
         response = openai.chat.completions.create(
             model="gpt-4o-mini",
-            prompt="Оцени от 0 до 100, насколько хорошо ключевые слова"
-            + f" характеризуют этот текст: {text}"
-            + f"\n\nКлючевые слова для оценки: {keyword}",
+            messages=messages,
             max_tokens=100,
             n=1,
             stop=None,
         )
-        text = response["choices"][0]["text"].strip()
+        text = response.choices[0].message.content.strip()
 
         match = re.search(r"\b\d{1,3}\b", text)
         if match:
@@ -60,9 +66,10 @@ def avg_gpt_similarity(texts, keywords):
 
 if __name__ == "__main__":
 
-    test_data = pd.read_json("./data/processed/test.jsonl", lines=True)
+    test_data = pd.read_json("./data/processed/train.jsonl", lines=True)
     test_data.dropna(inplace=True)
     test_data.reset_index(drop=True, inplace=True)
+    test_data = test_data.sample(500)
     print(f"Loaded {len(test_data)} samples")
 
     test_data["yake_keywords"] = test_data["yake_keywords"].apply(json.loads)
@@ -88,13 +95,13 @@ if __name__ == "__main__":
     )
 
     yake_similarity = avg_bert_similarity(
-        test_data["text"], test_data["yake_keywords"]
+        test_data["text"].tolist(), test_data["yake_keywords"].tolist()
     )
     rake_similarity = avg_bert_similarity(
-        test_data["text"], test_data["rake_keywords"]
+        test_data["text"].tolist(), test_data["rake_keywords"].tolist()
     )
     textrank_similarity = avg_bert_similarity(
-        test_data["text"], test_data["textrank_keywords"]
+        test_data["text"].tolist(), test_data["textrank_keywords"].tolist()
     )
 
     print(f"YAKE embedding similarity: {yake_similarity}")
@@ -102,13 +109,13 @@ if __name__ == "__main__":
     print(f"TextRank embedding similarity: {textrank_similarity}")
 
     yake_similarity = avg_gpt_similarity(
-        test_data["text"], test_data["yake_keywords"]
+        test_data["text"].tolist(), test_data["yake_keywords"].tolist()
     )
     rake_similarity = avg_gpt_similarity(
-        test_data["text"], test_data["rake_keywords"]
+        test_data["text"].tolist(), test_data["rake_keywords"].tolist()
     )
     textrank_similarity = avg_gpt_similarity(
-        test_data["text"], test_data["textrank_keywords"]
+        test_data["text"].tolist(), test_data["textrank_keywords"].tolist()
     )
 
     print(f"YAKE GPT similarity: {yake_similarity}")

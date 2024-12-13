@@ -27,6 +27,8 @@ model_name = args.model.split("/")[-1] + "-multifeature"
 
 train = pd.read_json("./data/labeled/train.jsonl", lines=True)
 test = pd.read_json("./data/labeled/test.jsonl", lines=True)
+train = train[train["topic"].isin(topics)]
+test = test[test["topic"].isin(topics)]
 
 tokenizer = AutoTokenizer.from_pretrained(args.model)
 if args.tokenizer_max_length:
