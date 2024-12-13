@@ -108,13 +108,13 @@ if __name__ == "__main__":
     print(f"RAKE embedding similarity: {rake_similarity}")
     print(f"TextRank embedding similarity: {textrank_similarity}")
 
-    yake_similarity = avg_gpt_similarity(
+    yake_gpt_similarity = avg_gpt_similarity(
         test_data["text"].tolist(), test_data["yake_keywords"].tolist()
     )
-    rake_similarity = avg_gpt_similarity(
+    rake_gpt_similarity = avg_gpt_similarity(
         test_data["text"].tolist(), test_data["rake_keywords"].tolist()
     )
-    textrank_similarity = avg_gpt_similarity(
+    textrank_gpt_similarity = avg_gpt_similarity(
         test_data["text"].tolist(), test_data["textrank_keywords"].tolist()
     )
 
@@ -125,6 +125,8 @@ if __name__ == "__main__":
     with open("./results/keywords_metrics.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(["Method", "Embedding Similarity", "GPT Similarity"])
-        writer.writerow(["YAKE", yake_similarity, yake_similarity])
-        writer.writerow(["RAKE", rake_similarity, rake_similarity])
-        writer.writerow(["TextRank", textrank_similarity, textrank_similarity])
+        writer.writerow(["YAKE", yake_similarity, yake_gpt_similarity])
+        writer.writerow(["RAKE", rake_similarity, rake_gpt_similarity])
+        writer.writerow(
+            ["TextRank", textrank_similarity, textrank_gpt_similarity]
+        )
