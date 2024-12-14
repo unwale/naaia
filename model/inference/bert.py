@@ -58,10 +58,10 @@ class BertTextClassifier:
         model_suffix = model_path.split("-")[-1].replace(".pth", "")
         match model_suffix:
             case "lin":
-                return RuBERTLinText(base_model_name)
+                return RuBERTLinText(base_model_name, 13)
             case "mlp":
-                return RuBERTMLPText(base_model_name)
+                return RuBERTMLPText(base_model_name, 13)
             case "multifeature":
-                return RuBERTMultifeature(base_model_name)
+                return RuBERTMultifeature(base_model_name, 13)
             case _:
                 raise ValueError(f"Unknown model suffix: {model_suffix}")

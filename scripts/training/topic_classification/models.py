@@ -20,7 +20,7 @@ class RuBERTLinText(nn.Module):
 
 class RuBERTMLPText(nn.Module):
 
-    def __init__(self, model: str, num_classes: int, hidden_size: int):
+    def __init__(self, model: str, num_classes: int, hidden_size: int = 128):
         super(RuBERTMLPText, self).__init__()
         self.bert = AutoModel.from_pretrained(model)
         self.mlp = nn.Sequential(
