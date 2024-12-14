@@ -2,9 +2,9 @@ import argparse
 
 import pandas as pd
 from sklearn.metrics import classification_report
-from utils import save_classification_report
 
 from model.inference.gigachat import GigaChatZeroshot
+from scripts.evaluation.classification.utils import save_classification_report
 
 parser = argparse.ArgumentParser(
     description="Evaluate Gigachat Zeroshot model"

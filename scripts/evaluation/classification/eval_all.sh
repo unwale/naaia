@@ -1,5 +1,7 @@
 #!/bin/bash
 
+python -m scripts.evaluation.classification.sgd
+
 # bert-based models
 # TODO add bert-based models
 

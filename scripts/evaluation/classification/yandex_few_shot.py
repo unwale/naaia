@@ -1,8 +1,8 @@
 import pandas as pd
 from sklearn.metrics import classification_report
-from utils import save_classification_report
 
 from model.inference.yandex import YandexFewShot
+from scripts.evaluation.classification.utils import save_classification_report
 
 test_data = pd.read_json("./data/labeled/test.jsonl", lines=True)
 test_data = test_data.sample(15)
