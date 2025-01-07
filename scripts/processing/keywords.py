@@ -13,6 +13,8 @@ from yake import KeywordExtractor
 # python -m spacy download ru_core_news_sm
 spc = spacy.load("ru_core_news_sm")
 
+nltk.download("stopwords")
+nltk.download("punkt_tab")
 stopwords = nltk.corpus.stopwords.words("russian")
 _doc = spc(" ".join(stopwords))
 stopwords = {w.text: [w.pos_] for w in _doc}

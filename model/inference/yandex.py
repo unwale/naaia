@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from tqdm import tqdm
 from yandex_cloud_ml_sdk import YCloudML
 
 
@@ -10,6 +11,7 @@ class YandexZeroshot:
         Initializes the Yandex Zeroshot classifier.
 
         Parameters:
+        - folder_id: The Yandex folder ID.
         - api_key: The Yandex API key.
         """
         self.sdk = YCloudML(folder_id=folder_id, auth=api_key)
@@ -18,14 +20,14 @@ class YandexZeroshot:
         model = self.sdk.models.text_classifiers("yandexgpt").configure(
             task_description="Определи тему новости", labels=topics
         )
-        predicitions = []
-        for text in inputs:
+        predictions = []
+        for text in tqdm(inputs, total=len(inputs)):
             prediction = max(
                 model.run(text).predictions, key=lambda x: x.confidence
             ).label
-            predicitions.append(prediction)
+            predictions.append(prediction)
 
-        return predicitions
+        return predictions
 
 
 class YandexFewShot:
@@ -37,6 +39,7 @@ class YandexFewShot:
         Initializes the Yandex Fewshot classifier.
 
         Parameters:
+        - folder_id: The Yandex folder ID.
         - api_key: The Yandex API key.
         - examples: A list of tuples, where each tuple contains
                     a text and a label.
@@ -48,11 +51,11 @@ class YandexFewShot:
         model = self.sdk.models.text_classifiers("yandexgpt").configure(
             task_description="Определи тему новости",
             labels=topics,
-            examples=self.examples,
+            samples=self.examples,
         )
 
         predicitions = []
-        for text in inputs:
+        for text in tqdm(inputs, total=len(inputs)):
             prediction = max(
                 model.run(text).predictions, key=lambda x: x.confidence
             ).label

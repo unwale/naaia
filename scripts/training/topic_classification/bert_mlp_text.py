@@ -72,6 +72,4 @@ trainer = CustomTrainer(
 
 trainer.train(2)
 
-trainer.plot_training_history()
-
 torch.save(model.state_dict(), f"./model/saved/{model_name}.pth")

@@ -46,7 +46,7 @@ def compute_temporal_scores(publication_dates, query, temporal_model):
     temporal_score = np.zeros(publication_dates.shape)
     dates = search_dates(query)
     if dates is None:
-        return None
+        return temporal_score
     for date in dates:
         date_text = date[0]
         words = query.split()

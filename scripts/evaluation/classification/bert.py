@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from sklearn.metrics import classification_report
 
 from model.inference.bert import BertTextClassifier
+from scripts import topics
 from scripts.evaluation.classification.utils import save_classification_report
 
 load_dotenv()
@@ -24,9 +25,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 model_name = args.model_path.split("/")[-1].replace(".pth", "")
-model = BertTextClassifier(
-    args.model_path, args.base_model_name, args.tokenizer
-)
+model = BertTextClassifier(args.model_path, args.base_model, args.tokenizer)
 if args.tokenizer_max_length:
     model.tokenizer.model_max_length = args.tokenizer_max_length
 
@@ -34,10 +33,6 @@ test = pd.read_json("./data/labeled/test.jsonl", lines=True)
 train = pd.read_json("./data/labeled/train.jsonl", lines=True)
 
 texts = test["text"].tolist()
-topics = (
-    train["topic"].unique().tolist()
-)  # TODO figure out the correct order of topics OR retrain all models
-
 gt = test["topic"].tolist()
 
 predictions = model.predict(texts, topics)

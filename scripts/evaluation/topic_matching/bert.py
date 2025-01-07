@@ -19,9 +19,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 model_name = args.model_path.split("/")[-1].replace(".pth", "")
-model = BertTextClassifier(
-    args.model_path, args.base_model_name, args.tokenizer
-)
+model = BertTextClassifier(args.model_path, args.base_model, args.tokenizer)
 if args.tokenizer_max_length:
     model.tokenizer.model_max_length = args.tokenizer_max_length
 
@@ -46,3 +44,8 @@ for i, row in tqdm(
             match_count += 1
 
 print(f"Topic matching accuracy: {match_count / num_queries:.2f}")
+
+with open("./results/matching_metrics.csv", "a") as f:
+    if f.tell() == 0:
+        f.write("model,accuracy\n")
+    f.write(f"{model_name},{match_count / num_queries:.2f}\n")

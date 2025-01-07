@@ -1,4 +1,4 @@
-#!/home/unwale/Projects/naaia/bin/python3.12
+#!/home/unwale/Projects/naaia/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

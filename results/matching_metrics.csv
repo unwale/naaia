@@ -1,0 +1,10 @@
+model,accuracy
+sgd,0.44
+GigaChat,0.46
+GigaChat-Pro,0.50
+rubert-tiny2-lin,0.52
+rubert-base-cased-lin,0.54
+ruBert-large-lin,0.54
+rubert-tiny2-mlp,0.55
+rubert-base-cased-mlp,0.53
+ruBert-large-mlp,0.56
